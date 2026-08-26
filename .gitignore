@@ -1,0 +1,8 @@
+.venv/
+.store/
+docs/
+!docs/.gitkeep
+.ipynb_checkpoints/
+__pycache__/
+.env
+.DS_Store
