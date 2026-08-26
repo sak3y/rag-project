@@ -13,6 +13,6 @@ vector store are all still being tested.
 ## Setup
 1. Python 3.12 (newer versions lack prebuilt wheels for chroma/torch)
 2. `ollama pull nomic-embed-text`
-3. Put documents (.md, .txt, .pdf) in `doc/`
+3. Put documents (.md, .txt, .pdf) in `docs/`
 4. GOOGLE_API_KEY in `.env` if using Gemini
 5. Open `rag_pipeline.ipynb`, run top to bottom
