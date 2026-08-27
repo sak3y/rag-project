@@ -1,0 +1,15 @@
+[project]
+name = "rag-project"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain", "langchain-core", "langchain-community", "langchain-text-splitters",
+    "langchain-chroma", "langchain-ollama", "langchain-google-genai",
+    "pypdf", "python-dotenv",
+]
+
+[project.scripts]
+rag = "cli:main"
+
+[tool.setuptools]
+py-modules = ["rag", "cli"]
