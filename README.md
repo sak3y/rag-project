@@ -10,6 +10,7 @@ which keeps the documents on this machine.
 Design decisions are not settled yet. Chunking strategy, embedding model, and
 vector store are all still being tested.
 
+<<<<<<< HEAD
 ## Setup (run once in a terminal, not here)
 
 ```bash
@@ -25,3 +26,11 @@ Select `.venv` as the kernel (top right in VS Code).
 Why 3.12: compiled packages (Chroma, torch) ship wheels for new Python versions months late. On the newest interpreter pip compiles from source, which is slow and fails often.
 
 Why Ollama for embeddings: `HuggingFaceEmbeddings` pulls in `torch` (2 GB, slow, version-sensitive). Ollama runs the model as a local server, so Python only needs an HTTP client.
+=======
+## Setup
+1. Python 3.12 (newer versions lack prebuilt wheels for chroma/torch)
+2. `ollama pull nomic-embed-text`
+3. Put documents (.md, .txt, .pdf) in `docs/`
+4. GOOGLE_API_KEY in `.env` if using Gemini
+5. Open `rag_pipeline.ipynb`, run top to bottom
+>>>>>>> 91fbfb5aa2c6cc6971318fb496b54dbda8865a8f
