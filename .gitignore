@@ -1,8 +1,20 @@
-.venv/
-.store/
-docs/
-!docs/.gitkeep
-.ipynb_checkpoints/
-__pycache__/
+# secrets
 .env
+
+# environment
+.venv/
+__pycache__/
+*.pyc
+
+# generated index (rebuild with index(rebuild=True))
+chroma_db/
+
+# Docs
+docs/
+
+# jupyter
+.ipynb_checkpoints/
+
+# editor / os
+.vscode/
 .DS_Store
