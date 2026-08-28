@@ -1,17 +1,30 @@
 # RAG Pipeline
 
-A retrieval augmented generation pipeline. Documents are chunked, embedded, and retrieved to give an LLM
-grounded context.
+A retrieval augmented generation pipeline that runs mostly on your own machine. Documents are chunked, embedded with a local model served by Ollama, and stored in a local Chroma vector database. At query time, relevant chunks are retrieved and passed as grounded context to the LLM.
 
-The corpus is personal notes and experience, so everything runs locally.
-Generation goes through Ollama and embeddings come from Hugging Face models,
-which keeps the documents on this machine.
+Generation uses Gemini Flash via API key. An Ollama-hosted model can be swapped in as the generator instead, which keeps everything local if privacy is a concern. Embeddings always run locally through Ollama, so the documents themselves never leave this machine.
 
-Design decisions are not settled yet. Chunking strategy, embedding model, and
-vector store are all still being tested.
+The test corpus is my personal notes, but the pipeline is corpus-agnostic. Point it at any set of documents.
 
+## Architecture
 
-## Setup (run once in a terminal, not here)
+```
+docs -> splitting -> chunking -> indexing -> embedding -> vector store -> retrieval -> generation
+```
+
+## Design decisions
+
+**Chunking strategy.** Currently targeting 80 to 120 tokens per chunk. The right size depends on the corpus: how the documents are formatted and how densely information is packed. Treat this as a tuning knob, not a constant.
+
+**Vector store.** Chroma, running locally. No external service required.
+
+**Why Ollama for embeddings instead of `HuggingFaceEmbeddings`.** The LangChain HuggingFace integration pulls in `torch` (roughly 2 GB, slow to install, version-sensitive). Ollama runs the embedding model as a local server, so the Python environment only needs an HTTP client.
+
+**Why Python 3.12.** Compiled packages like Chroma and torch ship prebuilt wheels for new Python versions months late. On the newest interpreter, pip falls back to compiling from source, which is slow and fails often.
+
+## Setup
+
+Run once in a terminal, not inside the notebook:
 
 ```bash
 brew install uv
@@ -21,17 +34,14 @@ uv pip install langchain langchain-core langchain-community langchain-text-split
 ollama pull nomic-embed-text
 ```
 
-Select `.venv` as the kernel (top right in VS Code).
+Then select `.venv` as the kernel (top right in VS Code).
 
-Why 3.12: compiled packages (Chroma, torch) ship wheels for new Python versions months late. On the newest interpreter pip compiles from source, which is slow and fails often.
+You'll also need a Google API key in a `.env` file for Gemini generation:
 
-Why Ollama for embeddings: `HuggingFaceEmbeddings` pulls in `torch` (2 GB, slow, version-sensitive). Ollama runs the model as a local server, so Python only needs an HTTP client.
+```
+GOOGLE_API_KEY=your-key-here
+```
 
-=======
-## Setup
-1. Python 3.12 (newer versions lack prebuilt wheels for chroma/torch)
-2. `ollama pull nomic-embed-text`
-3. Put documents (.md, .txt, .pdf) in `docs/`
-4. GOOGLE_API_KEY in `.env` if using Gemini
-5. Open `rag_pipeline.ipynb`, run top to bottom
->>>>>>
+## Credits
+
+Built following LangChain's [RAG From Scratch](https://www.youtube.com/playlist?list=PLfaIDFEXuae2LXbO1_PKyVJiQ23ZztA0x) video series, adapted for local embeddings and my own corpus.
