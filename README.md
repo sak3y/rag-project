@@ -1,8 +1,8 @@
 # RAG Pipeline
 
-A retrieval augmented generation pipeline that runs fully on your own machine by default. Documents are chunked, embedded with a local model served by Ollama, stored in a local Chroma vector database, then retrieved at query time and passed as context to the LLM.
+A retrieval augmented generation pipeline that runs fully on your own machine by default. Documents are chunked, embedded with a local model served by Ollama, stored in a local Chroma vector database, then retrieved at query time and passed as grounded context to the LLM.
 
-Generation defaults to a local Ollama model (`llama3.2`). Because the LLM is created through `init_chat_model`, you can swap in a hosted provider like Gemini with two environment variables, no code changes. Embeddings always run locally through Ollama, so the documents themselves never leave this machine.
+Generation defaults to a local Ollama model (`llama3.2`). Because the LLM is created through `init_chat_model`, you can swap in a hosted provider like Gemini with two environment variables, no code changes. That swap is a deliberate tradeoff: the local model keeps everything on-machine, the hosted one answers better. Privacy scope, precisely: embedding and indexing are always local, so the corpus as a whole never leaves this machine; with a hosted generator, each query sends the question plus the few retrieved chunks to the provider.
 
 The test corpus is my personal notes, but the pipeline is corpus-agnostic. Drop any `.pdf`, `.md`, or `.txt` files into the docs folder.
 
@@ -15,6 +15,8 @@ docs -> loading -> chunking -> embedding -> vector store (Chroma) -> retrieval -
 ## Design decisions
 
 **Chunking.** `RecursiveCharacterTextSplitter` with `chunk_size=800` characters and `chunk_overlap=120`. That's roughly 160 to 200 tokens per chunk: big enough to hold one coherent idea, small enough that the embedding stays sharp instead of averaging several topics together. The overlap repeats a slice of text between adjacent chunks so an idea split across a boundary survives intact in at least one of them. Both values are env-configurable; the right size depends on how dense and how fragmented the corpus is.
+
+**Retrieval depth.** `k=4` nearest chunks per query. This is a dial, not a score: too low risks missing a relevant chunk, too high pulls in weakly related text that burns prompt budget and buries the good chunks. Four is right-sized for a small personal corpus.
 
 **Deterministic chunk IDs.** Each chunk gets an md5 ID derived from its source path and position, so re-running the indexer upserts instead of duplicating. Pass `rebuild=True` to `index()` to wipe and re-embed from scratch.
 
@@ -76,4 +78,4 @@ Retrieval pulls the top `k=4` chunks by similarity. The prompt instructs the mod
 
 ## Credits
 
-Built following LangChain's [RAG From Scratch](https://www.youtube.com/playlist?list=PLfaIDFEXuae2LXbO1_PKyVJiQ23ZztA0x) video series, adapted for local embeddings and my own corpus.
+Built following LangChain's [RAG From Scratch](https://www.youtube.com/playlist?list=PLfaIDFEXuae2LXbO1_PKyVJiQ23ZztA0x) video series, adapted for local embeddings and my own corpus
