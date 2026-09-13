@@ -1,0 +1,52 @@
+[
+  {
+    "question": "what counts as theft",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/1",
+    "note": "Theft Act s.1: dishonest appropriation with intent to permanently deprive"
+  },
+  {
+    "question": "what does dishonestly mean",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/2",
+    "note": "Theft Act s.2: defines what is NOT dishonest"
+  },
+  {
+    "question": "what counts as property for theft",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/4",
+    "note": "Theft Act s.4: money, real and personal property, things in action"
+  },
+  {
+    "question": "is taking someone's car without permission a crime",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/12",
+    "note": "Theft Act s.12: taking a conveyance without authority"
+  },
+  {
+    "question": "what is burglary",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/9",
+    "note": "Theft Act s.9: entering as a trespasser with intent"
+  },
+  {
+    "question": "what is robbery",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/8",
+    "note": "Theft Act s.8: theft with force or fear of force"
+  },
+  {
+    "question": "what happens if I break someone else's property",
+    "expected": "http://www.legislation.gov.uk/ukpga/1971/48/section/1",
+    "note": "Criminal Damage Act s.1: destroying or damaging property"
+  },
+  {
+    "question": "what counts as fraud by false representation",
+    "expected": "http://www.legislation.gov.uk/ukpga/2006/35/section/2",
+    "note": "Fraud Act s.2: dishonest false representation for gain"
+  },
+  {
+    "question": "is hacking into a computer illegal",
+    "expected": "http://www.legislation.gov.uk/ukpga/1990/18/section/1",
+    "note": "Computer Misuse Act s.1: unauthorised access to computer material"
+  },
+  {
+    "question": "what is the penalty for supplying controlled drugs",
+    "expected": "http://www.legislation.gov.uk/ukpga/1971/38/section/4",
+    "note": "Misuse of Drugs Act s.4: restriction on production and supply"
+  }
+]
