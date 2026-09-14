@@ -12,8 +12,16 @@ def health():
 
 @app.get("/search")
 def search(question: str, k_neighbours: int = 4):
+    # find the source within the vectore store
     hits = rag.retrieve(store, question, k_neighbours)
+    res = []
+    for doc, score in hits:
+        res.append({
+            "text": doc.page_content,
+            "uri": doc.metadata["uri"],
+            "score": score
+        })
     return {
         "query": question,
-        "res": [d.page_content for d, _ in hits]
+        "res": res
     }
