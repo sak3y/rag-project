@@ -10,7 +10,7 @@ from langchain_ollama import OllamaEmbeddings
 from langchain_chroma import Chroma
 from langchain.chat_models import init_chat_model
 
-load_dotenv()
+load_dotenv(override=True)
 
 # Config
 DB_DIR = os.getenv("DB_DIR", "./chroma_db")
@@ -173,3 +173,5 @@ def evaluate(store, k=4, path="data/test.json"):
 if __name__ == "__main__":
     store = index(rebuild=True)
     evaluate(store)
+
+    
