@@ -120,6 +120,7 @@ def index(urls=ACT_URLS, rebuild=False):
             continue
         docs += split(root, url)
 
+    # ran into issues sending the entire doc to ollama, send as batch instead
     batch = 100
     for i in range(0, len(docs), batch):
         part = docs[i:i + batch]
@@ -178,5 +179,5 @@ def evaluate(store, k=4, path="tests/test.json"):
 
 
 if __name__ == "__main__":
-    store = index(rebuild=True)
+    store = index(rebuild=False)
     evaluate(store)
