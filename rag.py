@@ -154,7 +154,7 @@ def ask(store, question, k=4):
     return answer, hits
 
 
-def evaluate(store, k=4, path="data/test.json"):
+def evaluate(store, k=4, path="tests/test.json"):
     # Runs every test question and counts how often the right section came back in the top k
     cases = json.load(open(path))
     hits_at_k = 0
