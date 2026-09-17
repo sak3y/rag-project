@@ -106,6 +106,7 @@ def get_store():
 
 def index(urls=ACT_URLS, rebuild=False):
     # Fetches every Act, turns them into chunks, embeds them, and saves them to the database
+    
     store = get_store()
     if rebuild:
         store.delete_collection()
@@ -118,6 +119,12 @@ def index(urls=ACT_URLS, rebuild=False):
             print(f"failed to fetch: {url}")
             continue
         docs += split(root, url)
+
+    batch = 100
+    for i in range(0, len(docs), batch):
+        part = docs[i:i + batch]
+        store.add_documents(part, ids=[chunk_id(d) for d in part])
+        print(f"  {i + len(part)}/{len(docs)}")
 
     store.add_documents(docs, ids=[chunk_id(d) for d in docs])
     print(f"{len(docs)} subsections indexed, store holds {get_store()._collection.count()}")
