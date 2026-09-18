@@ -1,24 +1,79 @@
 # Legislation RAG Pipeline
 
-A retrieval augmented generation pipeline over UK criminal law. Acts are fetched from the legislation.gov.uk API as XML, chunked along the law's own structural boundaries, embedded locally, and retrieved at query time so an LLM answers from the statute with a citation rather than from memory.
+A retrieval augmented generation service over UK criminal law. Acts are fetched from the legislation.gov.uk API as XML, chunked along the law's own structural boundaries, embedded locally, and served over HTTP so an LLM answers from the statute with a citation rather than from memory.
 
 ## Architecture
 
 ```
 legislation.gov.uk API  ->  XML parse  ->  one chunk per subsection
-                                               |
-                                    embed (nomic-embed-text, local)
-                                               |
-                                        Chroma vector store
-                                               |
-                              retrieve top k=4 nearest chunks
-                                               |
-                                   LLM answers from those only
+                                                |
+                                     embed (nomic-embed-text, local)
+                                                |
+                                         Chroma vector store
+                                                |
+                               retrieve top k=4 nearest chunks
+                                                |
+                           LLM answers from those only  ->  FastAPI
 ```
 
-Seven functions, one job each: `load` fetches and parses, `text_of` extracts prose, `split` chunks, `chunk_id` and `get_store` handle persistence, `index` builds the store, `retrieve` and `ask` serve queries.
+Two modules. `rag.py` is the pipeline: fetch, chunk, embed, retrieve, generate. `api.py` is the HTTP layer and holds no pipeline logic.
 
 **Corpus:** Theft Act 1968, Criminal Damage Act 1971, Misuse of Drugs Act 1971, Fraud Act 2006, Computer Misuse Act 1990. 568 subsections. Adding an Act is one line in `ACT_IDS`.
+
+## Running it
+
+Docker Compose runs the API and Ollama as two services on a shared network:
+
+```bash
+docker compose up -d
+
+docker compose exec ollama ollama pull nomic-embed-text
+docker compose exec ollama ollama pull llama3.2
+docker compose exec api python rag.py
+```
+
+The last three are one-time. Models and the vector index both live in named volumes, so restarts are instant and nothing is re-downloaded or re-embedded. The API is then on `localhost:8000`, with interactive docs at `/docs`.
+
+### Without Docker
+
+```bash
+uv venv --python 3.12 && source .venv/bin/activate    # .venv\Scripts\Activate.ps1 on Windows
+uv pip install -r requirements.txt
+
+ollama pull nomic-embed-text
+ollama pull llama3.2
+
+python rag.py            # builds the index, then runs the eval
+uvicorn api:app --reload
+```
+
+Ollama must be running before anything else, and a fresh clone has no `chroma_db/`, so `python rag.py` is required before the API returns anything. Python is pinned to 3.12 because compiled packages ship prebuilt wheels for new interpreters months late, and pip otherwise falls back to compiling from source.
+
+## API
+
+`/search` is retrieval only: no model call, no cost, fast. `/ask` adds generation and is rate limited.
+
+```bash
+curl "localhost:8000/ask?query=what+is+burglary"
+```
+
+```json
+{
+  "query": "what is burglary",
+  "answer": "According to Section 9(1), a person is guilty of burglary if he enters
+             any building or part of a building as a trespasser with intent to commit
+             an offence mentioned in subsection (2).",
+  "sources": [
+    {
+      "text": "Section 9(1): A person is guilty of burglary if— he enters any building...",
+      "uri": "http://www.legislation.gov.uk/ukpga/1968/60/section/9/1",
+      "score": 0.603
+    }
+  ]
+}
+```
+
+Sources come back with every answer, each carrying the URI it was built from, so any claim can be checked against legislation.gov.uk rather than taken on trust. `/health` reports the chunk count, which is how a missing or empty index announces itself instead of silently returning nothing.
 
 ## Design decisions
 
@@ -28,56 +83,35 @@ Seven functions, one job each: `load` fetches and parses, `text_of` extracts pro
 
 **No overlap.** Overlap exists to rescue ideas cut at arbitrary boundaries. There are no arbitrary boundaries here, so it buys nothing.
 
-**IDs derived, not read.** Section number plus subsection number is not unique, because Schedules repeat the same numbering as the body. The chunk ID is an md5 of the provision's URI, built from the parent element rather than read off the child, after finding a published Act where one child URI pointed at the wrong section.
+**IDs derived, not read.** Section plus subsection number is not unique, because Schedules repeat the body's numbering. The chunk ID is an md5 of the provision's URI, built from the parent element rather than read off the child, after finding a published Act where one child URI pointed at the wrong section.
 
-**Whole-Act fetch.** One request returns every section, against dozens if fetching section by section and guessing where to stop.
+**L2 distance, not cosine.** Cosine is the usual default for text because vector magnitude tracks document length. Every chunk here is one subsection, so lengths cluster and the two metrics rank near-identically. The default was kept rather than rebuilt for no measurable gain.
 
-**Embeddings local, generation swappable.** Embedding runs on Ollama, so re-indexing is free and the corpus never leaves the machine. Generation goes through `init_chat_model`, making the provider configuration rather than code.
+**Embeddings local, generation swappable.** Embedding runs on Ollama, so re-indexing is free and the corpus never leaves the machine. Generation goes through `init_chat_model`, making the provider configuration rather than code: two environment variables switch `llama3.2` for a hosted model, with the key in `.env` and no other change.
 
 ## Retrieval quality
 
-Ten questions, each paired with the section that should answer it, scored on whether that section appears in the top k.
+Ten questions, each paired with the section that should answer it, scored on whether that section appears in the top k. The set lives in `tests/test.json` and runs with `evaluate(store)`.
 
 **hit@4: 10/10.** Questions are phrased the way a member of the public would ask ("is hacking into a computer illegal", "is taking someone's car without permission a crime") rather than in statutory language, so the score reflects retrieval bridging plain English to legal drafting. An earlier corpus scored 9/10, with the failure traced to near-identical Schedule paragraphs crowding out the section that answered the question.
 
 ## Tests
 
-Four assertions run against the loaded chunks before anything is indexed:
+Four pytest cases run against a committed XML fixture, so they need no network and no Ollama. One per input class: a plain subsection, a subsection with nested lettered points, a Schedule paragraph, and a shape check across every chunk asserting each has a unique ID and text behind its citation. Each pins a bug that actually occurred, which is the whole reason they exist.
 
-| Check | Catches |
-|---|---|
-| Non-empty result | Dead URL, wrong namespace |
-| Every chunk has a URI | Provisions the parser could not identify |
-| URIs unique | Schedule and section numbering collisions |
-| Every chunk has text | Provisions whose text the parser could not reach |
+```bash
+python -m pytest -v
+```
 
-Catching duplicates here rather than in the database gives a readable failure instead of a dump of hashes. A grounding check confirms the model refuses questions the corpus cannot answer.
+## Docker
+
+Two services rather than one image. Ollama is pulled prebuilt and the API is built from the Dockerfile; Compose puts them on a shared network, so the API reaches the model at `http://ollama:11434` instead of localhost, which inside a container means the container itself. Both the models and the index sit in named volumes, because a container's own filesystem is discarded on restart.
+
+The tradeoff: keeping the model containerised means the stack is free and entirely self-contained, but it is roughly 5 GB and wants several GB of RAM, so it will not run on a free hosting tier. The production alternative is hosted embeddings and generation, which makes the image small and deployable but costs per query. Free and self-contained was the deliberate choice.
 
 ## Working with the source data
 
-The published XML is well structured but not clean. Five issues surfaced during development and each is handled in the loader: the API serves XML rather than JSON and must be parsed from raw bytes; every tag sits in an unprefixed namespace that silently returns nothing if omitted; section numbers can hide behind nested commentary tags; text quoted from other Acts appears inline and has to be excluded or it gets indexed as the wrong Act's law; and amended sections store their text in markup the obvious element search never reaches. Each was found by running the pipeline and reading the failure, not from documentation.
-
-## Running
-
-Ollama must be running first. Then:
-
-```python
-store = index()                                       # fetch, chunk, embed, persist
-evaluate(store)                                       # hit@4 across the eval set
-print(ask(store, "what counts as theft?", debug=True))
-```
-
-`debug=True` prints the retrieved sections alongside the answer so grounding can be checked by eye.
-
-### Optional: hosted model
-
-Generation defaults to local `llama3.2`. Two constants switch it to a hosted provider with no other code change:
-
-```python
-LLM_MODEL, LLM_PROVIDER = "claude-sonnet-4-6", "anthropic"
-```
-
-The matching API key goes in `.env`. Embeddings stay local either way, so only the question and the four retrieved chunks are sent to the provider.
+The published XML is well structured but not clean. Five issues surfaced during development and each is handled in the loader: the API serves XML rather than JSON and must be parsed from raw bytes; every tag sits in an unprefixed namespace that silently returns nothing if omitted; section numbers can hide behind nested commentary tags; text quoted from other Acts appears inline and has to be excluded or it gets indexed as the wrong Act's law; and amended sections store their text in markup the obvious element search never reaches. A sixth is a genuine error in the published data, where one subsection carries another section's URI. Each was found by running the pipeline and reading the failure, not from documentation.
 
 ## Known gaps
 
@@ -85,41 +119,7 @@ The matching API key goes in `.env`. Embeddings stay local either way, so only t
 - The eval set is small and every question currently passes, which suggests it needs harder cases rather than that retrieval is perfect.
 - No amendment tracking, so the corpus is a snapshot rather than current law.
 - Vector search only. Exact-term lookups ("what does section 9 say") would benefit from hybrid keyword search.
-
-## Setup
-
-### Windows (PowerShell)
-
-```powershell
-irm https://astral.sh/uv/install.ps1 | iex
-
-uv venv --python 3.12
-.venv\Scripts\Activate.ps1
-
-uv pip install langchain langchain-core langchain-chroma langchain-ollama `
-               langchain-anthropic requests python-dotenv ipykernel
-
-winget install Ollama.Ollama
-ollama pull nomic-embed-text
-ollama pull llama3.2
-```
-
-If `Activate.ps1` is blocked: `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser`, once, then retry. Reopen the terminal after installing uv or Ollama so PATH updates.
-
-### macOS / Linux
-
-```bash
-brew install uv
-uv venv --python 3.12 && source .venv/bin/activate
-uv pip install langchain langchain-core langchain-chroma langchain-ollama \
-               langchain-anthropic requests python-dotenv ipykernel
-ollama pull nomic-embed-text
-ollama pull llama3.2
-```
-
-Select `.venv` as the kernel in VS Code (top right).
-
-**Why Python 3.12.** Compiled packages (Chroma, torch) ship prebuilt wheels for new Python versions months late. On the newest interpreter pip falls back to compiling from source, which is slow and fails often.
+- Not deployed. It runs locally under Compose but has no public instance.
 
 ## Credits
 
