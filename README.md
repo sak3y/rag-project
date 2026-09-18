@@ -97,7 +97,7 @@ Ten questions, each paired with the section that should answer it, scored on whe
 
 ## Tests
 
-Four pytest cases run against a committed XML fixture, so they need no network and no Ollama. One per input class: a plain subsection, a subsection with nested lettered points, a Schedule paragraph, and a shape check across every chunk asserting each has a unique ID and text behind its citation. Each pins a bug that actually occurred, which is the whole reason they exist.
+Six pytest cases run against a sample Act declared inline in the test file, so they need no network, no Ollama and no external files. One per input class: a plain subsection, one with nested lettered points, a section number hidden behind commentary tags, text quoted from another Act, a Schedule paragraph, and a shape check across every chunk asserting each has a unique ID and text behind its citation. Each pins a bug that actually occurred, which is the whole reason they exist.
 
 ```bash
 python -m pytest -v
@@ -119,6 +119,7 @@ The published XML is well structured but not clean. Five issues surfaced during 
 - The eval set is small and every question currently passes, which suggests it needs harder cases rather than that retrieval is perfect.
 - No amendment tracking, so the corpus is a snapshot rather than current law.
 - Vector search only. Exact-term lookups ("what does section 9 say") would benefit from hybrid keyword search.
+- Tests run against a hand-written sample rather than a captured API response, so a change to the published XML format would break the pipeline without failing a test.
 - Not deployed. It runs locally under Compose but has no public instance.
 
 ## Credits
