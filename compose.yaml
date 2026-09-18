@@ -1,0 +1,22 @@
+services:
+  ollama:
+    image: ollama/ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    depends_on:
+      - ollama
+    volumes:
+      - chroma_data:/app/chroma_db
+
+volumes:
+  ollama_data:
+  chroma_data:

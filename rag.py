@@ -17,6 +17,7 @@ DB_DIR = os.getenv("DB_DIR", "./chroma_db")
 EMBED_MODEL = os.getenv("EMBED_MODEL", "nomic-embed-text")
 LLM_MODEL = os.getenv("LLM_MODEL", "llama3.2")
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "ollama")
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://localhost:11434")
 
 ACT_IDS = [
     "ukpga/1968/60",   # Theft Act 1968
@@ -99,7 +100,7 @@ def get_store():
     # retrieves local vector store
     return Chroma(
         collection_name="legislation",
-        embedding_function=OllamaEmbeddings(model=EMBED_MODEL),
+        embedding_function=OllamaEmbeddings(model=EMBED_MODEL, base_url=OLLAMA_HOST),
         persist_directory=DB_DIR,
     )
 
@@ -142,6 +143,8 @@ def get_llm():
     # Built on first use, not on import, so retrieval-only callers never load a model
     global _llm
     if _llm is None:
+       _llm = init_chat_model(LLM_MODEL, model_provider="ollama", base_url=OLLAMA_HOST)
+    else:
         _llm = init_chat_model(LLM_MODEL, model_provider=LLM_PROVIDER)
     return _llm
 
