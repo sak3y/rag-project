@@ -1,0 +1,167 @@
+[
+  {
+    "question": "Does it still count as stealing if I didn't make a penny out of it and got nothing for myself?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/1",
+    "note": "Theft Act s.1: basic definition of theft, and it is immaterial whether the appropriation was for gain or for the thief's own benefit."
+  },
+  {
+    "question": "I was sure my mate wouldn't have minded me taking it. Can I still be done for stealing?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/2",
+    "note": "Theft Act s.2: when conduct is not to be regarded as dishonest, including belief in a right to the property or belief the owner would have consented."
+  },
+  {
+    "question": "I found a phone in the street and kept using it for a month. At what point does hanging onto it turn into a crime?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/3",
+    "note": "Theft Act s.3: assumption of an owner's rights, including a later assumption by someone who came by the item innocently."
+  },
+  {
+    "question": "Is it illegal to pick blackberries and wild mushrooms from a hedge if I'm going to sell them at a market stall?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/4",
+    "note": "Theft Act s.4: what can be owned for these purposes, covering land, wild plants picked for sale, and wild creatures."
+  },
+  {
+    "question": "The shop handed me way too much change and I walked off with it. Where do I stand?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/5",
+    "note": "Theft Act s.5: when something is treated as still belonging to someone else, including money handed over by mistake that you are obliged to give back."
+  },
+  {
+    "question": "I always meant to give the thing back eventually. Can they still say I meant to keep it for good?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/6",
+    "note": "Theft Act s.6: when treating something as your own to dispose of, or a long borrowing, counts as intending permanent deprivation."
+  },
+  {
+    "question": "How long can someone actually be sent down for if the jury finds them guilty of nicking stuff?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/7",
+    "note": "Theft Act s.7: maximum sentence on indictment for theft is seven years."
+  },
+  {
+    "question": "Some bloke shoved me into a wall and ran off with my phone. Is that treated more seriously than ordinary nicking?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/8",
+    "note": "Theft Act s.8: robbery, where force is used or threatened immediately before or at the time of stealing, punishable by life."
+  },
+  {
+    "question": "If someone climbs in through a window purely to smash the place up and doesn't take anything, what are they charged with?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/9",
+    "note": "Theft Act s.9: burglary, including entering as a trespasser intending to do unlawful damage to the building or its contents."
+  },
+  {
+    "question": "Does having a knife in your pocket while breaking into a house make things a lot worse for you?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/10",
+    "note": "Theft Act s.10: aggravated burglary, where the person has a firearm, imitation firearm, weapon of offence or explosive with them."
+  },
+  {
+    "question": "What happens if you walk out of a museum with something off the display during opening hours?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/11",
+    "note": "Theft Act s.11: removing articles from buildings open to the public to view, or from their grounds, carrying up to five years."
+  },
+  {
+    "question": "My neighbour took my bike for a spin round the block without asking and brought it back. Is that anything the police would care about?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/12",
+    "note": "Theft Act s.12: taking a conveyance without the owner's consent, with a separate lesser offence covering pedal cycles."
+  },
+  {
+    "question": "Someone drove off in a car that wasn't theirs and then wrote it off into a lamp post. Is that worse than just taking it?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/12A",
+    "note": "Theft Act s.12A: aggravated vehicle-taking, where after the taking the vehicle is driven dangerously or injury or damage results."
+  },
+  {
+    "question": "My neighbour has been running an extension lead off my supply for months. Is that a criminal offence or just a billing dispute?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/13",
+    "note": "Theft Act s.13: dishonestly using, wasting or diverting electricity without authority, up to five years."
+  },
+  {
+    "question": "A parcel was lifted from a mail van somewhere between Glasgow and Belfast. Can they still be put in front of a court down here?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/14",
+    "note": "Theft Act s.14: extends jurisdiction to thefts and robberies involving mail bags or postal packets moving between jurisdictions in the British postal area."
+  },
+  {
+    "question": "My boss made me shred paperwork and write false entries in the ledger to hide what he'd taken. What's he looking at?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/17",
+    "note": "Theft Act s.17: false accounting, destroying, defacing, concealing or falsifying records made for an accounting purpose, up to seven years."
+  },
+  {
+    "question": "If the wrongdoing was done by a limited company, can they go after the managing director as an individual too?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/18",
+    "note": "Theft Act s.18: officers of a body corporate are personally liable where the company's offence was committed with their consent or connivance."
+  },
+  {
+    "question": "A director sent out a written update to shareholders that he knew was misleading. Is that a crime or just something for the regulator?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/19",
+    "note": "Theft Act s.19: false statements by company directors and officers intended to deceive members or creditors, up to seven years."
+  },
+  {
+    "question": "My uncle burnt my grandmother's will so the house would come to him. What offence is that?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/20",
+    "note": "Theft Act s.20: dishonestly destroying, defacing or concealing a will, valuable security or court or government document, up to seven years."
+  },
+  {
+    "question": "Someone is demanding money off me and says he'll send photos to my family if I don't pay. What offence is he committing?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/21",
+    "note": "Theft Act s.21: blackmail, an unwarranted demand with menaces made with a view to gain or to cause loss, up to fourteen years."
+  },
+  {
+    "question": "I bought a phone off a bloke in the pub for forty quid and I had a fair idea where it came from. How much trouble am I in?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/22",
+    "note": "Theft Act s.22: handling stolen goods knowing or believing them to be stolen, carrying up to fourteen years."
+  },
+  {
+    "question": "Can I put a card in the shop window offering cash for my bike back with no questions asked?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/23",
+    "note": "Theft Act s.23: advertising a reward for the return of stolen or lost goods using no questions asked wording, punishable by a fine."
+  },
+  {
+    "question": "The watch was nicked in Spain before it got over here. Does it count as stolen once it's in this country?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/24",
+    "note": "Theft Act s.24: scope of the stolen goods provisions, covering thefts abroad, proceeds of the original goods, and when goods stop being stolen."
+  },
+  {
+    "question": "A big sum landed in my bank account that clearly wasn't meant for me and I just sat on it. Am I in bother?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/24A",
+    "note": "Theft Act s.24A: dishonestly failing to take reasonable steps to cancel a wrongful credit to an account, up to ten years."
+  },
+  {
+    "question": "Police stopped my cousin at two in the morning miles from home with bolt cutters and gloves in his bag. Can they do him for that on its own?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/25",
+    "note": "Theft Act s.25: going equipped, having an article with you away from home for use in a burglary or theft, up to three years."
+  },
+  {
+    "question": "Can the police get a magistrate to sign off on turning my house over looking for nicked gear?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/26",
+    "note": "Theft Act s.26: warrants to search for and seize stolen goods on information on oath before a justice of the peace."
+  },
+  {
+    "question": "Will the jury get told about my past convictions if I'm on trial for taking in dodgy gear?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/27",
+    "note": "Theft Act s.27: evidence and procedure on handling charges, including admitting earlier dealings with stolen goods and convictions in the past five years."
+  },
+  {
+    "question": "My husband emptied my savings account behind my back. Can he even be prosecuted for that while we're still married?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/30",
+    "note": "Theft Act s.30: applies the Act between spouses and civil partners, with prosecution generally needing the consent of the DPP."
+  },
+  {
+    "question": "He's been convicted over the painting he took off me. Does that conviction by itself put the ownership back in my name?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/31",
+    "note": "Theft Act s.31: effect on civil proceedings, self-incrimination in property proceedings, and title not being affected by the conviction alone."
+  },
+  {
+    "question": "My grandad talks about people being charged with larceny. Is that still a thing you can be charged with?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/32",
+    "note": "Theft Act s.32: abolishes the old common law offences including larceny, receiving and extortion, and how references to them are read now."
+  },
+  {
+    "question": "When the law talks about someone coming out ahead from what they did, does hanging onto something you already had count as coming out ahead?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/34",
+    "note": "Theft Act s.34: interpretation, defining gain and loss to include keeping what you have and not getting what you might get, and defining goods."
+  },
+  {
+    "question": "Can this law be used against somebody for something they did back in 1967?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/35",
+    "note": "Theft Act s.35: commencement on 1 January 1969 and effect only on offences wholly or partly committed on or after that date."
+  },
+  {
+    "question": "Does any of this apply if the whole thing happened up in Scotland?",
+    "expected": "http://www.legislation.gov.uk/ukpga/1968/60/section/36",
+    "note": "Theft Act s.36: short title and extent, the Act not extending to Scotland or Northern Ireland apart from specified amendments and repeals."
+  }
+]
